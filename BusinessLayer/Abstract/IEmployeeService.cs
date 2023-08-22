@@ -1,4 +1,5 @@
-﻿using Entities.Concrete;
+﻿using Core.Utilities.Results;
+using Entities.Concrete;
 using Entities.DTOs;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,10 @@ namespace BusinessLayer.Abstract
 {
 	public interface IEmployeeService
 	{
-		List<Employee> GetAll();
-		List<EmployeeDetailDto> GetEmployeeDetails();
+		IDataResult<List<Employee>> GetAll();
+
+		IDataResult<List<EmployeeDetailDto>> GetEmployeeDetails();
+		IResult Add(Employee employee);
+		IDataResult<Employee> GetEmployeeById(string id);
 	}
 }

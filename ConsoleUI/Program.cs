@@ -11,10 +11,16 @@ namespace ConsoleUI
 			EmployeeManager employeeManager = new EmployeeManager(new EFEmployeeDal());
 
 			var employees = employeeManager.GetEmployeeDetails();
-
-			foreach (var item in employees)
+			if (employees.Success)
 			{
-				Console.WriteLine(item.EmployeeName + "/" + item.JobDesc);
+				foreach (var item in employees.Data)
+				{
+					Console.WriteLine(item.EmployeeName + "/" + item.JobDesc);
+				}
+			}
+			else
+			{
+				Console.WriteLine(employees.Message);
 			}
 		
 		}
