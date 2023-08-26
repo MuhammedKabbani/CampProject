@@ -1,15 +1,21 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Constants;
+using BusinessLayer.ValidationRules.FluentValidation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 
 namespace BusinessLayer.Concrete
 {
@@ -21,17 +27,22 @@ namespace BusinessLayer.Concrete
 		{
 			_EmployeeDal = productDal;
 		}
-
+		[ValidationAspect(typeof(EmployeeValidator))]
 		public IResult Add(Employee employee)
 		{
-			if(employee.job_id <= 0)
+			var result = BusinesseRules.CheckRules(
+							CheckNotSimilerEmployeeNames(employee.emp_id)
+							);
+			if (result.Success)
 			{
-				return new ErrorResult(Messages.NoJobId);
+				_EmployeeDal.Add(employee);
+				return new SuccessResult(Messages.EmployeeAdded);
 			}
-			_EmployeeDal.Add(employee);
-
-			return new SuccessResult(Messages.EmployeeAdded);
+			return result;
 		}
+
+
+
 		public IDataResult<Employee> GetEmployeeById(string id)
 		{
 			var result =  _EmployeeDal.Get(x => x.emp_id == id);
@@ -47,6 +58,14 @@ namespace BusinessLayer.Concrete
 			var data =  _EmployeeDal.GetEmployeeDetails();
 			return new SuccessDataResult<List<EmployeeDetailDto>>( data);
 
+		}
+		private IResult CheckNotSimilerEmployeeNames(string emp_name)
+		{
+			if(_EmployeeDal.GetAll(e=>e.fname == emp_name).Any())
+			{
+				return new  ErrorResult(Messages.SimilerEmployeeName);
+			}
+			return new SuccessResult();
 		}
 	}
 }

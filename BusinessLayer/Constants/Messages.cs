@@ -12,5 +12,6 @@ namespace BusinessLayer.Constants
 		public static string EmployeeNotAdded = "Employee Isn't Added";
 		public static string NoJobId = "Invalid Job Id";
 		public static string SuccessMessage = "Successfully Done.";
+		public static string SimilerEmployeeName = "Employee Name Is Exsited Before";
 	}
 }

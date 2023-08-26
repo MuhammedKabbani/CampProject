@@ -1,6 +1,8 @@
 ﻿using Autofac;
+using Autofac.Extras.DynamicProxy;
 using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
+using Core.Utilities.Interceptors;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using System;
@@ -17,6 +19,14 @@ namespace BusinessLayer.DependecyResolvers.Autofac
 		{
 			builder.RegisterType<EmployeeManager>().As<IEmployeeService>().SingleInstance();
 			builder.RegisterType<EFEmployeeDal>().As<IEmployeeDal>().SingleInstance();
+
+			var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+
+			builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
+				.EnableInterfaceInterceptors(new Castle.DynamicProxy.ProxyGenerationOptions()
+				{
+					Selector = new AspectInterceptorSelector()
+				}).SingleInstance();
 		}
 	}
 }
