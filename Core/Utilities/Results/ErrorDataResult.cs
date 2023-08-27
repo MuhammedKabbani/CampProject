@@ -16,6 +16,10 @@ namespace Core.Utilities.Results
 		{
 
 		}
+		public ErrorDataResult(string message) : base(false, default)
+		{
+
+		}
 		// Defualt: T Tipin default hali
 		public ErrorDataResult() : base(false, default)
 		{

@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
+using BusinessLayer.BusinessAspects.Autofac;
 
 namespace BusinessLayer.Concrete
 {
@@ -27,6 +28,7 @@ namespace BusinessLayer.Concrete
 		{
 			_EmployeeDal = productDal;
 		}
+		[SecuredOperation("employee.add,admin")]
 		[ValidationAspect(typeof(EmployeeValidator))]
 		public IResult Add(Employee employee)
 		{
